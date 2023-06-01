@@ -1,0 +1,116 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    build: requirements/nginx/
+    volumes:
+      - wordpress_files:/var/www/html
+    ports:
+      - "443:443"
+    env_file:
+      - .env
+    depends_on:
+      - wordpress
+    networks:
+      - main_network
+    restart: always
+    
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    env_file:
+      - .env
+    build: requirements/mariadb/
+    volumes:
+      - wordpress_data:/var/lib/mysql
+    networks:
+      - main_network
+    restart: always
+    
+  wordpress:
+    container_name: wordpress
+    image: wordpress
+    build: requirements/wordpress
+    volumes:
+      - wordpress_files:/var/www/html
+    env_file:
+      - .env
+    depends_on:
+      - mariadb
+    networks:
+      - main_network
+    restart: always
+    
+  adminer:
+    container_name: adminer
+    image: adminer
+    build: requirements/bonus/adminer
+    ports:
+      - "4242:80"
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    networks:
+      - main_network
+    restart: always
+    
+  redis:
+    container_name: redis
+    image: redis
+    build: requirements/bonus/redis
+    env_file:
+      - .env
+    volumes:
+      - wordpress_files:/var/www/html
+    depends_on:
+      - wordpress
+    networks:
+      - main_network
+    restart: always
+  
+  ftp:
+    container_name: ftp
+    image: ftp
+    build: requirements/bonus/ftp
+    env_file:
+      - .env
+    volumes:
+      - wordpress_files:/home/albaud/ftp/files
+    ports:
+      - "20-21:20-21/tcp"
+      - "40000-40009:40000-40009/tcp"
+    depends_on:
+      - wordpress
+    networks:
+      - main_network
+    restart: always
+
+  python:
+    container_name: python
+    image: python
+    build: requirements/bonus/python
+    env_file:
+      - .env
+    ports:
+      - "42424:42424"
+    volumes:
+      - wordpress_files:/var/www/html
+    depends_on:
+      - nginx
+    networks:
+      - main_network
+    #restart: always
+  
+volumes:
+        wordpress_files:
+                name: wordpress_files
+                driver: local
+        wordpress_data:
+                name: wordpress_data
+                driver: local
+
+networks:
+  main_network:
