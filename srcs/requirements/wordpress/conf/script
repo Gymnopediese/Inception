@@ -2,9 +2,11 @@
 
 # create directory to use in nginx container later and also to setup the wordpress conf
 
-
+sleep 5
 cp wp-config.php /var/www/html/wp-config.php
 cd /var/www/html
+
+chmod -R 777 wp-admin
 
 #line 23
 sed -i -r "s/AAAAA/$DATABASE_NAME/1"   wp-config.php
@@ -12,7 +14,6 @@ sed -i -r "s/AAAAA/$DATABASE_NAME/1"   wp-config.php
 sed -i -r "s/BBBBB/$DATABASE_USER/1"  wp-config.php
 #line 29
 sed -i -r "s/CCCCC/$DATABASE_PASSWORD/1"    wp-config.php
-
 # The commands are for installing and using the WP-CLI tool.
 
 # downloads the WP-CLI PHAR (PHP Archive) file from the GitHub repository. The -O flag tells curl to save the file with the same name as it has on the server.

@@ -1,4 +1,3 @@
-
 ngrok authtoken $NGROK_KEY 2HWyr7LZXoydJQmvIShQ1xHkc8Y_2afydyhTHCxhiW8EweNLA
 
 python app.py

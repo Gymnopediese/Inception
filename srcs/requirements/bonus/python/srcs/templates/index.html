@@ -24,7 +24,6 @@
     <p>Bienvenue sur mon magnifique site web.</p>
 	<canvas id="myCanvas" width="800" height="500" style="border:1px solid #000000;">
 	</canvas>
-	<script src="website/js/pong.js"></script>
-	<script src="js/pong.js"></script>
+	<script src="{{ url_for('static', filename='js/pong.js') }}"></script>
   </body>
 </html>
